@@ -1,0 +1,43 @@
+# The gate that runs anywhere.
+#
+# Two of the three suites talk to the live tokens.ci API and need a Harness
+# profile with React in it, so they stay on a developer's machine. What runs
+# here is the half that is environment-independent and where most of the risk
+# is: the browser bundle's contract, its slot registration, its stylesheet, its
+# formatters, and every state it can render.
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # React is not a dependency of the plugin — the browser module table
+      # supplies it. It is installed here only so the render checks can borrow
+      # the same instance the page runs against.
+      - run: npm install --no-save --no-package-lock react@^18.3.1 react-dom@^18.3.1
+      - name: Syntax
+        run: |
+          node --check index.js
+          node --check client.js
+          node --check tokens-ci.mjs
+      - name: Manifest
+        run: |
+          node -e "
+            const p = require('./package.json');
+            const fail = (m) => { console.error(m); process.exit(1) };
+            if (p.dsh?.bundle?.patch !== './cordis.patch.yml') fail('no bundle patch');
+            if (p.dsh?.client?.platform !== 'web') fail('no web client declaration');
+            if (p.exports?.['./client'] !== './client.js') fail('no ./client export');
+            if (!p.peerDependencies?.['@deepseek-ai/dsh']) fail('no dsh peer range');
+            console.log('manifest ok');
+          "
+      - name: Render checks
+        run: node test/render.mjs

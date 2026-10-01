@@ -1,0 +1,17 @@
+# dsh-tokens-ci bundle patch.
+#
+# The plugin lives at this repository's root. `name` must be the full package
+# specifier exactly as it is installed in the profile's node_modules; `id` is
+# the loader row's label and stays equal to the package name so the
+# troubleshooting route `/plugins/<id>/client.js` points at the same string.
+#
+# `config` is optional. Without it the host half asks the local machine for a
+# GitHub account (`git config github.user`, then the `gh` CLI). Pin one here
+# when the machine names a different account than the one on tokens.ci:
+#
+#   config:
+#     username: your-github-handle
+#     period: week          # the period the page opens on: week | month | all
+- insert:
+    - id: tokens-ci
+      name: "dsh-tokens-ci"

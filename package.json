@@ -1,0 +1,63 @@
+{
+  "name": "dsh-tokens-ci",
+  "version": "1.0.0",
+  "private": true,
+  "description": "tokens.ci usage dashboard for DeepSeek Harness: daily token activity, cost, token mix, model shares and leaderboard standing, as a settings page.",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "icon": "./icon.svg",
+  "license": "MIT",
+  "homepage": "https://github.com/winniesi/dsh-tokens-ci",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winniesi/dsh-tokens-ci.git"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "tokens-ci",
+    "usage",
+    "tokens",
+    "cost",
+    "leaderboard",
+    "settings",
+    "web"
+  ],
+  "engines": {
+    "node": ">=18",
+    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "scripts": {
+    "test": "node test/all.mjs",
+    "check": "node test/render.mjs"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  }
+}
